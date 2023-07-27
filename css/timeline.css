@@ -1,0 +1,322 @@
+/* www.codepen.io | Airen | Timeline Components with CSS Container Queries */
+@layer reset, base,components.mobile, components.tablet, components.desktop, layout;
+
+@layer components.mobile {
+  .timeline--wrapper {
+    display: grid;
+    row-gap: 2rem;
+    grid-template-columns: 30px minmax(0, 1fr);
+    grid-template-areas: "line lists";
+  }
+
+  .timeline--wrapper::before {
+    content: "";
+    width: 2px;
+    grid-area: line;
+    background-color: #fff;
+    justify-self: center;
+  }
+
+  .timeline {
+    grid-area: lists;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .timeline li {
+    display: grid;
+    align-items: start;
+    align-content: start;
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 0.5rem 1.5rem;
+    grid-template-areas:
+      "avatar time"
+      "... title"
+      "... description";
+    margin-left: 1.5rem;
+    position: relative;
+  }
+
+  .timeline li::before {
+    content: "";
+    position: absolute;
+    height: 2px;
+    top: 31px;
+    background-color: #fff;
+    width: calc(64px + 1.5rem + 1.5rem + 15px);
+    right: calc(100% - 1.5rem - 64px);
+  }
+
+  .timeline img {
+    grid-area: avatar;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 2px solid rgb(255 210 0);
+    z-index: 2;
+  }
+
+  .timeline time {
+    grid-area: time;
+    color: rgb(255 210 0);
+    align-self: center;
+    font-size: clamp(1rem, 3cqi + 1.25rem, 1.5rem);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+  }
+
+  .timeline time::before,
+  .timeline time::after {
+    content: "";
+    display: block;
+    background-color: rgb(255 210 0);
+    width: 24px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 2px solid #000;
+  }
+
+  .timeline time::after {
+    right: calc(100% + 64px + 1.5rem + 1.5rem + 2px);
+    position: absolute;
+  }
+
+  .timeline h3 {
+    grid-area: title;
+    font-size: clamp(1.25rem, 4cqi + 1.5rem, 2rem);
+  }
+  .timeline p {
+    grid-area: description;
+    font-size: 85%;
+    color: rgb(255 255 255 / 0.8);
+  }
+}
+
+@layer components.tablet {
+  .timeline--container {
+    container-type: inline-size;
+  }
+
+  @container (width >= 768px) {
+    .timeline--wrapper {
+      grid-template-columns: auto;
+    }
+    .timeline--wrapper::before {
+      content: none;
+    }
+    .timeline {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 30px minmax(0, 1fr);
+      justify-content: center;
+      column-gap: 0;
+    }
+
+    .timeline::before {
+      content: "";
+      width: 2px;
+      grid-area: line;
+      background-color: #fff;
+      justify-self: center;
+      grid-row: 1 / span 12;
+      grid-column: 2;
+    }
+
+    .timeline li:nth-of-type(2n + 1) {
+      grid-column-start: 3;
+    }
+
+    .timeline li:nth-of-type(2n) {
+      grid-column-start: 1;
+      grid-template-columns: minmax(0, 1fr) 64px;
+
+      grid-template-areas:
+        "time  avatar"
+        "title ..."
+        "description ...";
+      margin-right: 1.5rem;
+      margin-left: 0;
+      justify-content: end;
+      text-align: end;
+    }
+
+    .timeline li:nth-of-type(2n) time {
+      flex-direction: row-reverse;
+    }
+
+    .timeline li:nth-of-type(2n) time::after {
+      left: calc(100% + 64px + 1.5rem + 1.5rem + 2px);
+      right: auto;
+    }
+
+    .timeline li:nth-of-type(2n)::before {
+      left: calc(100% - 1.5rem - 64px);
+      right: auto;
+    }
+
+    .timeline li:nth-of-type(3) {
+      grid-row-start: 3;
+    }
+
+    .timeline li:nth-of-type(3) {
+      grid-row-start: 5;
+    }
+
+    .timeline li:nth-of-type(4) {
+      grid-row-start: 7;
+    }
+
+    .timeline li:nth-of-type(5) {
+      grid-row-start: 9;
+    }
+
+    .timeline li:nth-of-type(6) {
+      grid-row-start: 11;
+    }
+  }
+}
+
+@layer components.desktop {
+  @container (width >= 1024px) {
+    .timeline--wrapper {
+      overflow-x: auto;
+    }
+    .timeline {
+      grid-template-columns: repeat(6, minmax(360px, 1fr));
+      grid-template-rows: auto 30px auto;
+    }
+
+    .timeline::before {
+      grid-column: 1 / span 6;
+      grid-row: 2;
+      width: 100%;
+      height: 2px;
+      justify-self: unset;
+      align-self: center;
+    }
+    .timeline li {
+      margin-left: 0;
+      grid-template-areas:
+        "avatar time"
+        "avatar title"
+        "avatar description";
+      grid-template-columns: 64px minmax(0, 1fr);
+      grid-template-rows: auto auto minmax(0, 1fr);
+      grid-row-start: 1;
+      grid-column-start: 1;
+    }
+
+    .timeline li:nth-of-type(2n) {
+      grid-row-start: 3;
+      text-align: start;
+      justify-content: start;
+      margin-right: 0;
+    }
+
+    .timeline li:nth-of-type(2n)::before {
+      bottom: 10px;
+      top: calc(0% - 2rem - 12px);
+    }
+
+    .timeline li:nth-of-type(2n)::after {
+      top: calc(0% - 2rem - 30px);
+      bottom: 0;
+    }
+
+    .timeline li:nth-of-type(2n) time {
+      flex-direction: row;
+    }
+
+    .timeline li:nth-of-type(2) {
+      grid-column-start: 2;
+    }
+
+    .timeline li:nth-of-type(3) {
+      grid-column-start: 3;
+    }
+
+    .timeline li:nth-of-type(4) {
+      grid-column-start: 4;
+    }
+
+    .timeline li:nth-of-type(5) {
+      grid-column-start: 5;
+    }
+
+    .timeline li:nth-of-type(6) {
+      grid-column-start: 6;
+    }
+    .timeline li::before {
+      right: auto;
+      bottom: calc(0% - 2rem - 3px);
+      top: 12px;
+      width: 2px;
+      grid-area: avatar;
+      justify-self: center;
+      height: unset;
+      left: auto;
+    }
+
+    .timeline li::after {
+      content: "";
+      display: block;
+      background-color: rgb(255 210 0);
+      width: 24px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 2px solid #000;
+      grid-area: avatar;
+      justify-self: center;
+      align-self: end;
+      z-index: 2;
+      position: absolute;
+      bottom: calc(0% - 2rem - 30px);
+    }
+
+    .timeline time::before {
+      position: absolute;
+      right: calc(100% + 32px + 10px);
+    }
+
+    .timeline time::after {
+      content: none;
+    }
+
+    .timeline img {
+      place-self: center;
+    }
+  }
+}
+@layer reset {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  ol {
+    list-style: none outside none;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+@layer base {
+  body {
+    width: 100vw;
+    min-height: 100vh;
+    font-family: "Exo", "Bungee Shade", cursive, Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
+    display: grid;
+    align-items: start;
+    align-content: start;
+    padding: 1rem;
+  }
+}
